@@ -6,9 +6,29 @@
 	<link rel="stylesheet" href="style.css">
 </head>
 <body>
+	<h1>My todo List</h1>
+	<main id="lul">
+		<section class="todoList">
+			<h2>Existing Tasks</h2>
+			<ul>
+				<li v-for="items in todoItems">
+					<input type="text" v-bind:value="items.task" v-on:click = "editItem" readonly/>
+					<span >{{items.status}}</span>
+					<button v-on:click = 'deleteItem'>delete</button>
+				</li>
+			</ul>
+		</section>
 
-
-
+		<aside>
+			<form action="" v-on:submit = 'addTodoItem'>
+				<h1>Add new task</h1>
+				<label>
+					Task name: <input v-model="itemTemplate.task" type="text" value="asd"/>
+				</label>
+				<input type="submit" value="Add"/>
+			</form>
+		</aside>
+	</main>
 
 <script src="vue.js"></script>
 <script src="script.js"></script>
