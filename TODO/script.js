@@ -1,6 +1,8 @@
 var vm = new Vue({
 	el:'#lul',
 	data:{
+		false: false,
+		true: true,
 		todoItems:[
 			{
 				task:"Test",
@@ -22,11 +24,11 @@ var vm = new Vue({
 		itemTemplate:{
 			task: "",
 			status: ""
-		}
+		},
+		editIndex: null
 	},
 	methods:{
 		addTodoItem: function (e) {
-			e.preventDefault();
 			var item = this.convertLinkToData(this.itemTemplate);
 			this.todoItems.push(item);
 			this.clearTemplate();
@@ -47,7 +49,12 @@ var vm = new Vue({
 		clearTemplate: function () {
 			this.itemTemplate.task='';
 			this.itemTemplate.status='';
+		},
+		setEditElement:function (index) {
+			this.editIndex = index;
+		},
+		isEditing:function (index) {
+			return this.editIndex !== index
 		}
-
 	}
 });
