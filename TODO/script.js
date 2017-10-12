@@ -1,4 +1,3 @@
-
 var statusListComponents = {
 
 	template:
@@ -13,7 +12,7 @@ var statusListComponents = {
 	data: function () {
 		return {
 			statusList: ["To Do", "In progress", "Done" ]
-		}
+		};
 	}
 };
 
@@ -38,12 +37,12 @@ var todolistComponet = {
 				todoItemIndex: null,
 				fieldIndex: null
 			}
-		}
+		};
 	},
 
 	methods: {
-		deleteItem: function (index,key) {
-			this.todoItems.splice(index,1)
+		deleteItem: function (index) {
+			this.todoItems.splice(index,1);
 		},
 		setEditElement: function (index,key) {
 			this.editElement.todoItemIndex = index;
@@ -122,15 +121,7 @@ var vm = new Vue({
 	el:'#todo',
 
 	data:{
-		todoItems:[
-			{
-				textInfo:{
-					task:"qwe",
-					comment:"454"
-				},
-				status: "Done"
-			}
-		],
+		todoItems:[],
 		itemTemplate:{
 			textInfo:{
 				task:"",
