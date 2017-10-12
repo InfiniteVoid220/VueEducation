@@ -13,7 +13,7 @@ main{
 	flex-wrap: wrap;
 }
 .todoList{
-	flex-basis: 70%;
+	flex-basis: 50%;
 }
 ul{
 	list-style: none;

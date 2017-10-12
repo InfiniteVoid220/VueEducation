@@ -7,30 +7,13 @@
 </head>
 <body>
 	<h1>My todo List</h1>
-	<main id="lul">
+	<main id="todo">
 		<section class="todoList">
 			<h2>Existing Tasks</h2>
 			<todo-list :todo-items="todoItems"></todo-list>
 		</section>
-
 		<aside>
-			<form action="" v-on:submit.prevent = "addTodoItem">
-				<h1>Add new task</h1>
-				<label>
-					Task name: <input v-model="itemTemplate.task" type="text" value=""/>
-				</label>
-				<label>
-					Status:
-					<select v-model="itemTemplate.status">
-						<option>Todo</option>
-						<option>In Progress</option>
-					</select>
-				</label>
-				<label>
-					Task name: <input v-model="itemTemplate.priority" type="text" value=""/>
-				</label>
-				<input type="submit" value="Add"/>
-			</form>
+			<todo-item-form :todo-items ='todoItems' :item-template="itemTemplate"></todo-item-form>
 		</aside>
 	</main>
 
