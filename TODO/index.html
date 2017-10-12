@@ -10,20 +10,24 @@
 	<main id="lul">
 		<section class="todoList">
 			<h2>Existing Tasks</h2>
-			<ul>
-				<li v-for="(items, index) in todoItems">
-					<input v-model="items.task" type="text" v-on:click = "setEditElement(index)" v-bind:readonly="isEditing(index)"/>
-					<span>{{items.status}}</span>
-					<button v-on:click = 'deleteItem'>delete</button>
-				</li>
-			</ul>
+			<todo-list :todo-items="todoItems"></todo-list>
 		</section>
 
 		<aside>
-			<form action="" v-on:submit.prevent = 'addTodoItem'>
+			<form action="" v-on:submit.prevent = "addTodoItem">
 				<h1>Add new task</h1>
 				<label>
-					Task name: <input v-model="itemTemplate.task" type="text" value="asd"/>
+					Task name: <input v-model="itemTemplate.task" type="text" value=""/>
+				</label>
+				<label>
+					Status:
+					<select v-model="itemTemplate.status">
+						<option>Todo</option>
+						<option>In Progress</option>
+					</select>
+				</label>
+				<label>
+					Task name: <input v-model="itemTemplate.priority" type="text" value=""/>
 				</label>
 				<input type="submit" value="Add"/>
 			</form>

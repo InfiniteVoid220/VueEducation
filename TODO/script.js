@@ -1,8 +1,43 @@
+var todolistComponet = {
+
+	template:
+	'<ul>'+
+		'<li v-for="(item, index) in todoItems">'+
+			'<input v-model="item.task" type="text"  v-on:click = "setEditElement(index)" v-bind:readonly="isEditing(index)"/>'+
+			'<span>{{item.status}}</span>'+
+			'<span>{{item.priority}}</span>'+
+			'<button v-on:click = "deleteItem(index)">delete</button>'+
+		'</li>'+
+	'</ul>',
+
+	props: [
+		'todoItems'
+	],
+
+	data: function () {
+		return {
+			editElement: null
+		}
+	},
+
+	methods: {
+		deleteItem: function (index) {
+			this.todoItems.splice(index,1)
+		},
+		setEditElement:function (index) {
+			this.editElement = index
+		},
+		isEditing:function (index) {
+			return this.editElement !== index
+		}
+	}
+
+};
+
+
 var vm = new Vue({
 	el:'#lul',
 	data:{
-		false: false,
-		true: true,
 		todoItems:[
 			{
 				task:"Test",
@@ -23,21 +58,18 @@ var vm = new Vue({
 		],
 		itemTemplate:{
 			task: "",
-			status: ""
-		},
-		editIndex: null
+			status: "",
+			priority:""
+		}
+	},
+	components:{
+		"todoList": todolistComponet
 	},
 	methods:{
-		addTodoItem: function (e) {
+		addTodoItem: function () {
 			var item = this.convertLinkToData(this.itemTemplate);
 			this.todoItems.push(item);
-			this.clearTemplate();
-		},
-		deleteItem: function () {
-			this.todoItems.splice(-1,1)
-		},
-		editItem: function (e) {
-			console.log(e.target.hasAttributes("readonly"));
+			this.clearObject(this.itemTemplate);
 		},
 		convertLinkToData: function (obj) {
 			var result = {};
@@ -46,15 +78,10 @@ var vm = new Vue({
 			}
 			return result;
 		},
-		clearTemplate: function () {
-			this.itemTemplate.task='';
-			this.itemTemplate.status='';
-		},
-		setEditElement:function (index) {
-			this.editIndex = index;
-		},
-		isEditing:function (index) {
-			return this.editIndex !== index
+		clearObject: function (obj) {
+			for(key in obj){
+				obj[key] = '';
+			}
 		}
 	}
 });
