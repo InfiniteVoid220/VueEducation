@@ -18,6 +18,11 @@ main{
 ul{
 	list-style: none;
 }
+ul li{
+	width: 200px;
+	height: 200px;
+	border: 1px solid black;
+}
 input[readonly]{
 	background-color: white;
 	border: 1px solid red;

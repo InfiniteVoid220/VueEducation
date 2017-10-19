@@ -1,64 +1,99 @@
-var statusListComponents = {
+let statusListComponents = {
 
 	template:
-	'<select v-model="item.status">'+
-	'<option v-for="status in statusList">{{status}}</option>'+
+	'<select v-model="selectedValue">'+
+		'<option v-for="status in statusList">{{status}}</option>'+
 	'</select>',
 
 	props: [
-		'item'
+		'valueList'
 	],
 
 	data: function () {
 		return {
-			statusList: ["To Do", "In progress", "Done" ]
+			selectedValue: null
 		};
+	},
+	watch: {
+		selectedValue: function(){
+			this.$emit('update', this.selectedValue)
+		}
 	}
 };
 
-var todolistComponet = {
+let todolistComponet = {
 
 	template:
-	'<ul>'+
-		'<li v-for="(item, index) in todoItems">'+
-			'<status-list :item="item"></status-list>'+
-			'<input v-for="value,key in item.textInfo" v-model = "item.textInfo[key]" type = "text"  v-on:click = "setEditElement(index,key)" v-bind:readonly = "isEditing(index,key)"/>'+
-			'<button v-on:click = "deleteItem(index)">delete</button>'+
-		'</li>'+
-	'</ul>',
+	'<div class="todo-list-wrapper">'+
+		'<status-list @update="changeFilter"></status-list>'+
+		'<p>{{filter}}</p>'+
+		'<ul class="task-list">'+
+			'<li v-for="(item, index) in todoItems" v-if="filter == item.status">'+
+				'<status-list @update="changeStatus" v-bind:disabled = "isEditing(item)"></status-list>'+
+				'<label v-for="value,key, labelIndex in item.textInfo">{{inputLabels[labelIndex]}}<input v-model = "item.textInfo[key]" type = "text" v-bind:readonly = "isEditing(item)"/></label>'+
+				'<button  v-on:click = "setEditElement(item)">edit</button>'+
+				'<button v-on:click = "deleteItem(index)">delete</button>'+
+			'</li>'+
+		'</ul>'+
+	'</div>',
 
 	props: [
 		'todoItems'
 	],
 
+	created: function () {
+		window.addEventListener("click", this.outZoneClick)
+	},
+
 	data: function () {
 		return {
-			editElement:{
-				todoItemIndex: null,
-				fieldIndex: null
-			}
+			inputLabels:['Task Title','Comment'],
+			editElement: null,
+			filter: 'Done'
 		};
 	},
 
 	methods: {
+		setEditElement: function (item) {
+			this.editElement = !this.editElement? this.editElement: null ;
+		},
+		isEditing: function (item) {
+			return this.editElement !== item;
+		},
 		deleteItem: function (index) {
 			this.todoItems.splice(index,1);
 		},
-		setEditElement: function (index,key) {
-			this.editElement.todoItemIndex = index;
-			this.editElement.fieldIndex = key;
+		changeFilter: function (filter) {
+			this.filter = filter;
 		},
-		isEditing: function (index,key) {
-			return !(this.editElement.todoItemIndex === index && this.editElement.fieldIndex === key);
+		changeStatus: function (status) {
+			this.status = status;
+		},
+		outZoneClick: function (e) {
+			let element = e.target;
+			if(!this.checkParentNode(element, 'task-list')) {
+				this.editElement = null;
+			}
+		},
+		checkParentNode: function (element, className) {
+			let el = element;
+			while (el.parentNode) {
+				if(el.className === className){
+					return true;
+				}
+				el = el.parentNode
+			}
+			return false;
 		}
 	},
+
 	components:{
 		"statusList": statusListComponents
 	}
 
 };
 
-var addTodoItemComponent = {
+let addTodoItemComponent = {
 
 	template:
 	'<form action="" v-on:submit.prevent = "addTodoItem">'+
@@ -80,8 +115,8 @@ var addTodoItemComponent = {
 
 	methods:{
 		addTodoItem: function () {
-			var item = this.convertLinkToData(this.itemTemplate);
-			if(this.isUniqueTask(item,this.todoItems)){
+			let item = this.convertLinkToData(this.itemTemplate);
+			if(this.isUniqueTask(item, this.todoItems)){
 				this.pushNewItem(item);
 			}
 			else console.error("Task with this title already exist!");
@@ -115,21 +150,43 @@ var addTodoItemComponent = {
 	}
 };
 
-
-
-var vm = new Vue({
+let vm = new Vue({
 	el:'#todo',
 
 	data:{
-		todoItems:[],
+		todoItems:[
+			{
+				textInfo:{
+					task:"Tes1",
+					comment:"Coment1"
+				},
+				status: "Done"
+			},
+			{
+				textInfo:{
+					task:"Tes1",
+					comment:"Coment1"
+				},
+				status: "Done"
+			},
+			{
+				textInfo:{
+					task:"Tes1",
+					comment:"Coment1"
+				},
+				status: "To Do"
+			}
+		],
 		itemTemplate:{
 			textInfo:{
 				task:"",
 				comment:""
 			},
 			status: ""
-		}
+		},
+		statusList: ["To Do", "In progress", "Done" ]
 	},
+
 
 	components:{
 		"todoList": todolistComponet,
